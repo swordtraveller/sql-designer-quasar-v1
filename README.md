@@ -2,40 +2,55 @@
 
 An elegant SQL designer
 
-## Install the dependencies
+## 项目配置
+
+```
+√ What would you like to build? » App with Quasar CLI, let's go!
+√ Project folder: ... sql-designer-quasar-v1
+√ Pick Quasar version: » Quasar v2 (Vue 3 | latest and greatest)
+√ Pick script type: » Typescript
+√ Pick Quasar App CLI variant: » Quasar App CLI with Vite
+√ Package name: ... sql-designer-quasar-v1
+√ Project product name: (must start with letter if building mobile apps) ... SQL Designer
+√ Project description: ... An elegant SQL designer
+√ Pick a Vue component style: » Composition API
+√ Pick your CSS preprocessor: » Sass with SCSS syntax
+√ Check the features needed for your project: » ESLint, State Management (Pinia), Axios
+√ Pick an ESLint preset: » Prettier
+```
+
+## 安装依赖
+
 ```bash
 yarn
 # or
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### 运行
+
 ```bash
 quasar dev
 ```
 
+### Lint
 
-### Lint the files
 ```bash
 yarn lint
 # or
 npm run lint
 ```
 
+### 格式化
 
-### Format the files
 ```bash
 yarn format
 # or
 npm run format
 ```
 
+### 打包生产版本
 
-
-### Build the app for production
 ```bash
 quasar build
 ```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
