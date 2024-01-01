@@ -2,7 +2,7 @@ name: Build and Deploy
 on:
     push:
         branches:
-            - 'ci-githubPage'
+            - 'master'
 permissions:
     contents: write
 jobs:
