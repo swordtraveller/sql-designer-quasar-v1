@@ -14,7 +14,11 @@ jobs:
               run: |
                   yarn global add @quasar/cli
 
-            - name: Install and Build 🔧
+            - name: Install
+              run: |
+                  yarn install
+
+            - name: Build 🔧
               run: |
                   quasar build
 
