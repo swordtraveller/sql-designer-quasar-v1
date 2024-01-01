@@ -33,7 +33,7 @@ npm install
 quasar dev
 ```
 
-### Lint
+### 代码检查
 
 ```bash
 yarn lint
@@ -54,3 +54,9 @@ npm run format
 ```bash
 quasar build
 ```
+
+## 开发规范
+
+### Commit Message Format
+
+参考[Angular Commit Message Format](https://gist.github.com/brianclements/841ea7bffdb01346392c)
