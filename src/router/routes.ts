@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
     {
-        path: '/sql-designer-quasar-v1',
+        path: '/',
         component: () => import('layouts/MainLayout.vue'),
         children: [
             { path: '', component: () => import('pages/SqlDesigner.vue') },
