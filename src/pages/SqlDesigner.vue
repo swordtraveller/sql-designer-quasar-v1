@@ -55,10 +55,6 @@
                         v-model="tableSchema.fieldsList[index].notNullable"
                         label="Not Null"
                     />
-                    <!-- <q-checkbox
-                        v-model="tableSchema.fieldsList[index].incremental"
-                        label="Incremental"
-                    /> -->
                     <q-btn
                         outline
                         size="xs"
@@ -76,6 +72,66 @@
             </div>
             <q-btn outline color="primary" icon="add" @click="addField" />
             <q-separator style="width: 62vw" />
+            <div
+                style="display: flex; flex-direction: row; align-items: center"
+            >
+                <q-select
+                    label="Auto Increment Key"
+                    transition-show="jump-up"
+                    transition-hide="jump-up"
+                    filled
+                    v-model="tableSchema.autoIncrementKey"
+                    :options="fieldListOption"
+                    style="width: 15vw"
+                >
+                    <template v-slot:append>
+                        <q-icon
+                            name="close"
+                            @click.stop.prevent="
+                                tableSchema.autoIncrementKey = ''
+                            "
+                            class="cursor-pointer"
+                        />
+                    </template>
+                </q-select>
+                <q-icon
+                    name="info"
+                    style="font-size: 1.5rem; margin-left: 1cap; color: #ccc"
+                >
+                    <q-tooltip>
+                        The auto-increment key of the table is unique.
+                    </q-tooltip>
+                </q-icon>
+            </div>
+            <div
+                style="display: flex; flex-direction: row; align-items: center"
+            >
+                <q-select
+                    label="Primary Key"
+                    transition-show="jump-up"
+                    transition-hide="jump-up"
+                    filled
+                    v-model="tableSchema.primaryKey"
+                    :options="fieldListOption"
+                    style="width: 15vw"
+                >
+                    <template v-slot:append>
+                        <q-icon
+                            name="close"
+                            @click.stop.prevent="tableSchema.primaryKey = ''"
+                            class="cursor-pointer"
+                        />
+                    </template>
+                </q-select>
+                <q-icon
+                    name="info"
+                    style="font-size: 1.5rem; margin-left: 1cap; color: #ccc"
+                >
+                    <q-tooltip>
+                        The primary key of the table is unique.
+                    </q-tooltip>
+                </q-icon>
+            </div>
             <q-select
                 label="Engine"
                 transition-show="jump-up"
@@ -132,7 +188,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import {
     dataTypeKinds,
     engineKinds,
@@ -151,16 +207,26 @@ const tableSchema = reactive<{
     name: string;
     ifNotExists: boolean;
     fieldsList: Field[];
+    autoIncrementKey: string;
+    primaryKey: string;
     engine: string;
     charset: string;
 }>({
     name: '',
     ifNotExists: true,
     fieldsList: [new Field()],
+    autoIncrementKey: '',
+    primaryKey: '',
     engine: '',
     charset: '',
 });
 const sqlStatement = ref('');
+
+// 遍历当前表的字段对象列表，提取每个字段对象的字段名，生成字符串列表，
+// 将来可以传递给q-select标签的options属性，用于主键、自增键等场景下的字段选择
+const fieldListOption = computed(() =>
+    tableSchema.fieldsList.map((field) => field.name)
+);
 // #endregion
 
 // #region functions
@@ -190,19 +256,30 @@ const onSubmit = () => {
         if (field.notNullable === true) {
             fieldLineList.push('NOT NULL');
         }
-        // if (field.incremental === true) {
-        //     fieldLineList.push('AUTO_INCREMENT');
-        // }
+        if (field.name === tableSchema.autoIncrementKey) {
+            fieldLineList.push('AUTO_INCREMENT');
+        }
         if (field.comment != '') {
             fieldLineList.push('COMMENT');
             fieldLineList.push(`'${field.comment}'`);
         }
-        if (index != tableSchema.fieldsList.length - 1) {
+        if (
+            index != tableSchema.fieldsList.length - 1 || // 除了最后一个字段，每个字段声明行结尾都需要加逗号
+            tableSchema.primaryKey != '' // （即使是最后一个字段）在当前表有主键时，也需要加逗号，此校验规则后续可以加一条：如果当前表有唯一约束，也需要加逗号
+        ) {
             fieldLineList.push(',');
         }
         let fieldLine: string = fieldLineList.join(' ');
         sqlStatementLineList.push(fieldLine);
     });
+    if (tableSchema.primaryKey != '') {
+        let primaryKeyLineList: string[] = [
+            '\tPRIMARY KEY',
+            `(${tableSchema.primaryKey})`,
+        ];
+        let primaryKeyLine: string = primaryKeyLineList.join(' ');
+        sqlStatementLineList.push(primaryKeyLine);
+    }
     let lastLineList: string[] = [
         ')',
         `ENGINE=${tableSchema.engine.value}`,
