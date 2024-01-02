@@ -52,9 +52,9 @@ import EssentialLink, {
 const essentialLinks: EssentialLinkProps[] = [
     {
         title: 'Github',
-        caption: 'Waiting to be provided...',
+        caption: 'swordtraveller',
         icon: 'code',
-        link: '#',
+        link: 'https://github.com/swordtraveller/sql-designer-quasar-v1',
     },
 ];
 
